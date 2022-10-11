@@ -1,6 +1,6 @@
 ﻿namespace GroceryShopAPI.DTO
 {
-    public class ProductInputDTO
+    public class ProductEntryDTO
     {
         public string Name { get; set; }
 

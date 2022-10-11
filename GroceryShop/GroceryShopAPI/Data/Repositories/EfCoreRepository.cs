@@ -25,9 +25,9 @@
             return await _context.Set<TEntity>().FindAsync(id);
         }
 
-        public virtual async void Insert(TEntity entity)
+        public virtual void Insert(TEntity entity)
         {
-            await _context.Set<TEntity>().AddAsync(entity);
+            _context.Set<TEntity>().Add(entity);
         }
 
         public virtual void Update(TEntity entity)
