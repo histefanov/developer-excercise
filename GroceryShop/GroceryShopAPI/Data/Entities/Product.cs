@@ -11,6 +11,8 @@
 
         public decimal Price { get; set; }
 
+        public Category Category { get; set; }
+
         public virtual ICollection<ProductDeal> ProductDeals { get; set; } = new HashSet<ProductDeal>();
     }
 }

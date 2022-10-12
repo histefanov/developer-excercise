@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GroceryShopAPI.Data.Migrations
 {
     [DbContext(typeof(ShopDbContext))]
-    [Migration("20221007220915_InitialCreate")]
+    [Migration("20221012202455_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -48,6 +48,29 @@ namespace GroceryShopAPI.Data.Migrations
                     b.ToTable("Bills");
                 });
 
+            modelBuilder.Entity("GroceryShopAPI.Data.Entities.Category", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Categories");
+                });
+
             modelBuilder.Entity("GroceryShopAPI.Data.Entities.Deal", b =>
                 {
                     b.Property<int>("Id")
@@ -79,6 +102,9 @@ namespace GroceryShopAPI.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<int?>("CategoryId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("TEXT");
 
@@ -98,6 +124,8 @@ namespace GroceryShopAPI.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CategoryId");
+
                     b.ToTable("Products");
                 });
 
@@ -114,6 +142,16 @@ namespace GroceryShopAPI.Data.Migrations
                     b.HasIndex("DealId");
 
                     b.ToTable("ProductDeals");
+                });
+
+            modelBuilder.Entity("GroceryShopAPI.Data.Entities.Product", b =>
+                {
+                    b.HasOne("GroceryShopAPI.Data.Entities.Category", "Category")
+                        .WithMany("Products")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Category");
                 });
 
             modelBuilder.Entity("GroceryShopAPI.Data.Entities.ProductDeal", b =>
@@ -133,6 +171,11 @@ namespace GroceryShopAPI.Data.Migrations
                     b.Navigation("Deal");
 
                     b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("GroceryShopAPI.Data.Entities.Category", b =>
+                {
+                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("GroceryShopAPI.Data.Entities.Deal", b =>

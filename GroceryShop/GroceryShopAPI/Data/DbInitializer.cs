@@ -1,41 +1,70 @@
 ﻿namespace GroceryShopAPI.Data
 {
     using GroceryShopAPI.Data.Entities;
+    using Microsoft.EntityFrameworkCore;
 
     public static class DbInitializer
     {
         public static async Task Initialize(ShopDbContext context)
         {
+            await SeedCategories(context);
             await SeedProducts(context);
             await SeedDeals(context);
             await SeedProductDeals(context);
+        }
+
+        private static async Task SeedCategories(ShopDbContext context)
+        {
+            if (!context.Categories.Any())
+            {
+                var categories = new List<Category>
+                {
+                    new Category { Name = "Fruits" },
+                    new Category { Name = "Vegetables"}
+                };
+
+                foreach (var category in categories)
+                {
+                    await context.Categories.AddAsync(category);
+                }
+
+                await context.SaveChangesAsync();
+            }
         }
 
         private static async Task SeedProducts(ShopDbContext context)
         {
             if (!context.Products.Any())
             {
+                var fruitsCategory = await context.Categories.FirstOrDefaultAsync(c => c.Name == "Fruits");
+                var vegetablesCategory = await context.Categories.FirstOrDefaultAsync(c => c.Name == "Vegetables");
+
                 var products = new List<Product>
                 {
                     new Product
                     {
                         Name = "apple",
-                        Price = 50
+                        Price = 50,
+                        Category = fruitsCategory
                     },
                     new Product
                     {
                         Name = "banana",
-                        Price = 40
+                        Price = 40,
+                        Category = fruitsCategory
                     },
                     new Product
                     {
                         Name = "tomato",
-                        Price = 30
+                        Price = 30,
+                        // For the sake of client convenience, we can say that tomatoes are vegetables =D
+                        Category = vegetablesCategory
                     },
                     new Product
                     {
                         Name = "potato",
-                        Price = 26
+                        Price = 26,
+                        Category = vegetablesCategory
                     }
                 };
 
@@ -46,7 +75,7 @@
 
                 await context.SaveChangesAsync();
             }
-        }
+        }       
 
         private static async Task SeedDeals(ShopDbContext context)
         {

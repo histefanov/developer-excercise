@@ -2,7 +2,6 @@
 {
     using Microsoft.EntityFrameworkCore;
     using GroceryShopAPI.Data.Entities;
-    using Microsoft.AspNetCore.Identity;
 
     public class ShopDbContext : DbContext
     {
@@ -13,6 +12,8 @@
 
         public DbSet<Product> Products { get; set; }
 
+        public DbSet<Category> Categories { get; set; }
+
         public DbSet<Deal> Deals { get; set; }
 
         public DbSet<Bill> Bills { get; set; }
@@ -22,6 +23,11 @@
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            builder.Entity<Category>()
+                .HasMany(c => c.Products)
+                .WithOne(p => p.Category)
+                .OnDelete(DeleteBehavior.SetNull);
 
             builder.Entity<ProductDeal>()
                 .HasKey(pd => new { pd.ProductId, pd.DealId });
