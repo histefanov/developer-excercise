@@ -6,9 +6,9 @@ namespace GroceryShopAPI.Controllers
 {
     public class ProductsController : BaseApiController
     {
-        private readonly ProductsService _productsService;
+        private readonly IProductsService _productsService;
 
-        public ProductsController(ProductsService productsService)
+        public ProductsController(IProductsService productsService)
         {
             _productsService = productsService;
         }

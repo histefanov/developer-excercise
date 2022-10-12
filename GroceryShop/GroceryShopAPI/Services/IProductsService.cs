@@ -8,9 +8,9 @@
 
         Task<ProductViewDTO> GetById(int id);
 
-        Task<ProductViewDTO> Create(ProductEntryDTO productCreateDTO);
+        Task<ProductViewDTO> Create(ProductEntryDTO productEntry);
 
-        Task<ProductViewDTO> Update(ProductEntryDTO newProduct);
+        Task<ProductViewDTO> Update(ProductEntryDTO productEntry);
 
         Task Delete(int id);
     }

@@ -11,6 +11,10 @@
             CreateMap<Product, ProductViewDTO>();
 
             CreateMap<ProductEntryDTO, Product>();
+
+            CreateMap<Deal, DealViewDTO>();
+
+            CreateMap<DealEntryDTO, Deal>();
         }
     }
 }

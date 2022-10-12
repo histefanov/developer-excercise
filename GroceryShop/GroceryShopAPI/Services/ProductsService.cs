@@ -84,15 +84,15 @@
             await _products.Save();
         }
 
-        protected void ValidateProduct(ProductEntryDTO newProduct)
+        protected void ValidateProduct(ProductEntryDTO productEntry)
         {
-            if (string.IsNullOrWhiteSpace(newProduct.Name) 
-                || newProduct.Name.Length > GlobalConstants.ProductNameMaxLength)
+            if (string.IsNullOrWhiteSpace(productEntry.Name) 
+                || productEntry.Name.Length > GlobalConstants.ProductNameMaxLength)
             {
                 throw new Exception(GlobalConstants.ProductNameInvalid);
             }
 
-            if (newProduct.Price <= 0)
+            if (productEntry.Price <= 0)
             {
                 throw new Exception(GlobalConstants.ProductPriceInvalid);
             }
