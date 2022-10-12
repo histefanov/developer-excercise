@@ -12,11 +12,13 @@
     public class ProductsService : IProductsService
     {
         private readonly IRepository<Product> _products;
+        private readonly IDealsService _dealsService;
         private readonly IMapper _mapper;
 
-        public ProductsService(IRepository<Product> products, IMapper mapper)
+        public ProductsService(IRepository<Product> products, IMapper mapper, IDealsService dealsService)
         {
             _products = products;
+            _dealsService = dealsService;
             _mapper = mapper;
         }
 
@@ -53,6 +55,8 @@
 
             var product = _mapper.Map<Product>(productEntry);
 
+            AddProductDeals(product, productEntry.ProductDeals);
+
             _products.Insert(product);
             await _products.Save();
 
@@ -64,6 +68,8 @@
             ValidateProduct(productEntry);
 
             var product = _mapper.Map<Product>(productEntry);
+
+            await AddProductDeals(product, productEntry.ProductDeals);
 
             _products.Update(product);
             await _products.Save();
@@ -84,7 +90,33 @@
             await _products.Save();
         }
 
-        protected void ValidateProduct(ProductEntryDTO productEntry)
+        private async Task AddProductDeals(Product product, string[] dealNames)
+        {
+            foreach (var dealName in dealNames)
+            {
+                var deal = await _dealsService.GetByName(dealName);
+
+                if (deal == null)
+                {
+                    throw new Exception(GlobalConstants.DealNotFound);
+                }
+
+                if (product.ProductDeals.Any(pd => pd.Deal.Name == dealName))
+                {
+                    throw new Exception(GlobalConstants.DealExists);
+                }
+
+                var productDeal = new ProductDeal
+                {
+                    Deal = deal,
+                    Product = product
+                };
+
+                product.ProductDeals.Add(productDeal);
+            }
+        }
+
+        private void ValidateProduct(ProductEntryDTO productEntry)
         {
             if (string.IsNullOrWhiteSpace(productEntry.Name) 
                 || productEntry.Name.Length > GlobalConstants.ProductNameMaxLength)

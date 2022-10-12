@@ -7,5 +7,7 @@
         public decimal Price { get; set; }
 
         public string CategoryName { get; set; }
+
+        public string[] ProductDeals { get; set; } 
     }
 }

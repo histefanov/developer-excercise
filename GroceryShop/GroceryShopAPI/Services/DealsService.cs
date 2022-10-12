@@ -38,6 +38,18 @@
             return _mapper.Map<DealViewDTO>(deal);
         }
 
+        public async Task<Deal> GetByName(string name)
+        {
+            var deal = await _deals.GetAll().FirstOrDefaultAsync(d => d.Name == name);
+
+            if (deal == null)
+            {
+                throw new Exception(GlobalConstants.DealNotFound);
+            }
+
+            return deal;
+        }
+
         public async Task<DealViewDTO> Create(DealEntryDTO dealEntry)
         {
             var dealExists = await _deals.GetAll().AnyAsync(p => p.Name == dealEntry.Name);
